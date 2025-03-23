@@ -1,0 +1,19 @@
+{% extends 'tracker/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center">Report a Bug</h2>
+    
+    <div class="card p-4 shadow-lg mx-auto" style="max-width: 500px;">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-danger w-100">Submit Bug</button>
+        </form>
+    </div>
+
+    <div class="text-center mt-3">
+        <a href="{% url 'bug_list' %}" class="btn btn-secondary">Back to Bug List</a>
+    </div>
+</div>
+{% endblock %}

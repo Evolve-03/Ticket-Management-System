@@ -1,0 +1,53 @@
+{% extends 'tracker/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center">All Bugs</h2>
+
+    <div class="text-center mb-3">
+        <a href="{% url 'add_bug' %}" class="btn btn-primary">+ Add New Bug</a>
+    </div>
+
+    {% if bugs %}
+    <div class="table-responsive mt-4">
+    <table class="table table-bordered table-hover table-striped text-center align-middle">
+        <thead class="table-dark">
+                <tr>
+                    <th>Title</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Project</th>
+                    <th scope="col">Assigned To</th>
+                    <th scope="col">Created At</th>
+                    <th scope="col">Created By</th>
+                    <th scope="col">Modified At</th>
+                    <th scope="col">Modified By</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for bug in bugs %}
+                <tr>
+                    <td>{{ bug.title }}</td>
+                    <td>{{ bug.description }}</td>
+                    <td><span class="badge bg-{% if bug.status == 'Open' %}danger{% elif bug.status == 'In Progress' %}warning{% else %}success{% endif %}">
+                        {{ bug.status }}</span></td>
+                    <td>{{ bug.project.name }}</td>
+                    <td>{{ bug.assigned_to.username }}</td>
+                    <td>{{ bug.created_at|date:"d M Y, H:i" }}</td>
+                    <td>{{ bug.created_by.username }}</td>
+                    <td>{{ bug.modified_at|date:"d M Y, H:i" }}</td>
+                    <td>{{ bug.modified_by.username }}</td>
+                    <td>
+                        <a href="{% url 'update_bug' bug.id %}" class="btn btn-sm btn-secondary">Edit</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <p class="text-center text-muted">No bugs reported yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

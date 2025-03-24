@@ -78,13 +78,13 @@ def user_list(request):
 @login_required
 def add_user(request):
     if not request.user.is_superuser:
-        return redirect('user_list')  # Only admins can add users
+        return redirect('user_list')
 
     if request.method == "POST":
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.is_active = True  # ✅ Activate the user
+            user.is_active = True
             user.save()
             return redirect('user_list')
         else:

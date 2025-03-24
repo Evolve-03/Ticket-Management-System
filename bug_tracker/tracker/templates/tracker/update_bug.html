@@ -1,9 +1,9 @@
 {% extends 'tracker/base.html' %}
 
 {% block content %}
-<div class="container d-flex justify-content-center align-items-center vh-100">
+<div class="container d-flex justify-content-center align-items-center vh-85">
     <div class="card p-4 shadow-lg" style="width: 100%; max-width: 500px;">
-        <h2 class="text-center mb-4">Update Bug: {{ bug.title }}</h2>
+        <h2 class="text-nowrap">Update Bug: {{ bug.title }}</h2>
         
         <form method="post">
             {% csrf_token %}
@@ -13,7 +13,7 @@
             </div>
             <div class="mb-3">
                 <label for="id_description" class="form-label">Description</label>
-                {{ form.description }}
+                    {{ form.description }}
             </div>
             <div class="mb-3">
                 <label for="id_status" class="form-label">Status</label>

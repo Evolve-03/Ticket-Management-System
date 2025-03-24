@@ -9,6 +9,7 @@
         <div class="text-center mb-3">
             <a href="{% url 'add_user' %}" class="btn btn-success">+ Add New User</a>
         </div>
+    
     {% endif %}
 
     <!-- Users Table -->
@@ -57,10 +58,6 @@
                 {% endfor %}
             </tbody>
         </table>
-    </div>
-
-    <div class="text-center mt-3">
-        <a href="{% url 'home' %}" class="btn btn-secondary">Back to Home</a>
     </div>
 </div>
 {% endblock %}

@@ -2,8 +2,12 @@
 
 {% block content %}
 <div class="container d-flex justify-content-center align-items-center vh-85">
-    <div class="card p-4 shadow-lg" style="width: 100%; max-width: 500px;">
-        <h2 class="text-nowrap">Update Bug: {{ bug.title }}</h2>
+    <div class="card p-4 shadow-lg" style="width: auto; max-width: Auto;">
+        
+        <div class="text-center mb-4">
+            <h2 class="text-nowrap">Update Ticket: {{ bug.title }}</h2>
+        </div>
+        
         
         <form method="post">
             {% csrf_token %}
@@ -13,7 +17,7 @@
             </div>
             <div class="mb-3">
                 <label for="id_description" class="form-label">Description</label>
-                    {{ form.description }}
+                {{ form.description }}
             </div>
             <div class="mb-3">
                 <label for="id_status" class="form-label">Status</label>
@@ -23,10 +27,11 @@
                 <label for="id_assigned_to" class="form-label">Assigned To</label>
                 {{ form.assigned_to }}
             </div>
-            <button type="submit" class="btn btn-success w-100">Update Bug</button>
+            <button type="submit" class="btn btn-success w-100">Update ticket</button>
         </form>
-
-        <a href="{% url 'bug_list' %}" class="btn btn-secondary w-100 mt-3">Back to Bug List</a>
+        
+        <a href="{% url 'bug_list' %}" class="btn btn-secondary w-100 mt-3">Back to ticket list</a>
+    
     </div>
 </div>
 {% endblock %}

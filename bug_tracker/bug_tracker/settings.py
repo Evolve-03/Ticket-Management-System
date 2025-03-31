@@ -119,8 +119,6 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-ALLOWED_HOSTS = ['Ticket-Management-System.onrender.com', '127.0.0.1']
-
 DJANGO_SETTINGS_MODULE='tracker.settings'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/'

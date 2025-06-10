@@ -10,9 +10,12 @@ urlpatterns = [
     path('bugs/', views.bug_list, name='bug_list'),
     path('bugs/add/', views.add_bug, name='add_bug'),
     path('bugs/update/<int:bug_id>/', views.update_bug, name='update_bug'),
+    path('bugs/remove/<int:bug_id>/', views.remove_bug, name='remove_bug'),
     path('users/add/', views.add_user, name='add_user'),
     path('users/', views.user_list, name='user_list'),
     path('users/remove/<int:user_id>/', views.remove_user, name='remove_user'),
+    path('bugs/export/', views.export_bugs, name='export_bugs'),
+    path('bugs/import/', views.import_bugs, name='import_bugs'),
 
     # Login & Logout Views
     path('login/', auth_views.LoginView.as_view(template_name='tracker/login.html'), name='login'),

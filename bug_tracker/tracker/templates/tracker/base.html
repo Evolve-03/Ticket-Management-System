@@ -29,6 +29,8 @@
                                 {% if request.user.is_superuser %}
                                     <li><a class="dropdown-item" href="{% url 'user_list' %}">User List</a></li>
                                     <li><a class="dropdown-item" href="{% url 'project_list' %}">Project List</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'export_bugs' %}">Export Bugs</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'import_bugs' %}">Import Bugs</a></li>
                                 {% endif %}
                                 <li><a class="dropdown-item" href="{% url 'bug_list' %}">Tickets</a></li>
                                 <li>

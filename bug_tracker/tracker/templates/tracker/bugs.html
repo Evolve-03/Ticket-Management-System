@@ -23,6 +23,7 @@
                     <th class="text-nowrap">Modified At</th>
                     <th class="text-nowrap">Modified By</th>
                     <th scope="col">Actions</th>
+                    <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
@@ -40,6 +41,10 @@
                     <td>{{ bug.modified_by.username }}</td>
                     <td>
                         <a href="{% url 'update_bug' bug.id %}" class="btn btn-sm btn-secondary">Edit</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'remove_bug' bug.id %}" class="btn btn-danger btn-sm"
+                                   onclick="return confirm('Are you sure you want to remove this ticket?');">Remove</a>
                     </td>
                 </tr>
                 {% endfor %}

@@ -1,3 +1,4 @@
+import csv
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -5,6 +6,7 @@ from .models import Bug, Project
 from .forms import BugForm, ProjectForm, BugUpdateForm
 from .forms import CustomUserCreationForm
 from django.contrib import messages
+from django.http import HttpResponse
 
 
 @login_required
@@ -101,6 +103,11 @@ def remove_user(request, user_id):
     return redirect('user_list')
 
 @login_required
+def remove_bug(request, bug_id):
+    Bug.objects.get(id=bug_id).delete()
+    return redirect('bug_list')
+
+@login_required
 def update_bug(request, bug_id):
     bug = get_object_or_404(Bug, id=bug_id)
 
@@ -118,3 +125,62 @@ def update_bug(request, bug_id):
         form = BugUpdateForm(instance=bug)
 
     return render(request, 'tracker/update_bug.html', {'form': form, 'bug': bug})
+
+
+@login_required
+def export_bugs(request):
+    if not request.user.is_superuser:
+        return HttpResponse("Unauthorized", status=401)
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="tickets.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Title', 'Description', 'Status', 'Project', 'Assigned To'])
+
+    for bug in Bug.objects.all():
+        writer.writerow([
+            bug.title,
+            bug.description,
+            bug.status,
+            bug.project.name if bug.project else '',
+            bug.assigned_to.username if bug.assigned_to else ''
+        ])
+
+    return response
+
+@login_required
+def import_bugs(request):
+    if request.method == 'POST':
+        csv_file = request.FILES['csv_file']
+        decoded_file = csv_file.read().decode('utf-8').splitlines()
+        reader = csv.DictReader(decoded_file)
+
+        for row in reader:
+            project_name = row['Project'].strip()
+            username = row['Assigned To'].strip()
+
+            # Get or create project
+            project, created_project = Project.objects.get_or_create(name=project_name)
+            if created_project:
+                messages.info(request, f"Project '{project_name}' was created.")
+
+            # Get or create user
+            assigned_to = User.objects.filter(username=username).first()
+            if not assigned_to:
+                assigned_to = User.objects.create_user(username=username, password='tickets@123')
+                messages.info(request, f"User '{username}' was created with default password.")
+
+            # Create the bug
+            Bug.objects.create(
+                title=row['Title'].strip(),
+                description=row['Description'].strip(),
+                status=row['Status'].strip(),
+                project=project,
+                assigned_to=assigned_to
+            )
+
+        messages.success(request, "Bug data imported successfully.")
+        return redirect('bug_list')
+
+    return render(request, 'tracker/import_bugs.html')

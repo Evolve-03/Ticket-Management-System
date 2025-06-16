@@ -7,16 +7,19 @@ from .forms import BugForm, ProjectForm, BugUpdateForm
 from .forms import CustomUserCreationForm
 from django.contrib import messages
 from django.http import HttpResponse
+from django.core.paginator import Paginator
 
 
 @login_required
 def home(request):
-    if request.user.is_superuser:
-        user_bugs = Bug.objects.all()
-    else:
-        user_bugs = Bug.objects.filter(assigned_to=request.user)
+    bugs_queryset = Bug.objects.filter(assigned_to=request.user).order_by('-created_at')
+    paginator = Paginator(bugs_queryset, 6)
 
-    return render(request, 'tracker/home.html', {'bugs': user_bugs})
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'tracker/home.html', {'page_obj': page_obj})
+    
 
 
 @login_required
@@ -54,8 +57,13 @@ def update_project(request, project_id):
 
 @login_required
 def bug_list(request):
-    bugs = Bug.objects.all()
-    return render(request, 'tracker/bugs.html', {'bugs': bugs})
+    bug_queryset = Bug.objects.all().order_by('-created_at')
+    paginator = Paginator(bug_queryset, 6)  # 6 bugs per page
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'tracker/bugs.html', {'page_obj': page_obj})     
 
 @login_required
 def add_bug(request):
@@ -136,10 +144,12 @@ def export_bugs(request):
     response['Content-Disposition'] = 'attachment; filename="tickets.csv"'
 
     writer = csv.writer(response)
-    writer.writerow(['Title', 'Description', 'Status', 'Project', 'Assigned To'])
+    writer.writerow(['Ticket ID', 'Changeset', 'Title', 'Description', 'Status', 'Project', 'Assigned To'])
 
     for bug in Bug.objects.all():
         writer.writerow([
+            bug.ticket_number,
+            bug.changeset_id,
             bug.title,
             bug.description,
             bug.status,
@@ -173,6 +183,7 @@ def import_bugs(request):
 
             # Create the bug
             Bug.objects.create(
+                changeset_id=row['Changeset id'].strip(),
                 title=row['Title'].strip(),
                 description=row['Description'].strip(),
                 status=row['Status'].strip(),

@@ -6,7 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 class BugForm(forms.ModelForm):
     class Meta:
         model = Bug
-        fields = ['title', 'description', 'status', 'assigned_to', 'project']
+        fields = ['changeset_id', 'title', 'description', 'status', 'assigned_to', 'project']
 
 class ProjectForm(forms.ModelForm):
     class Meta:
@@ -39,4 +39,4 @@ class CustomUserCreationForm(UserCreationForm):
 class BugUpdateForm(forms.ModelForm):
     class Meta:
         model = Bug
-        fields = ['title', 'description', 'status', 'assigned_to']
+        fields = ['title', 'description', 'status', 'assigned_to', 'project', 'changeset_id']

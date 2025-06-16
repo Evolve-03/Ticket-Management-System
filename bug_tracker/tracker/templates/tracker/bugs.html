@@ -1,58 +1,84 @@
 {% extends 'tracker/base.html' %}
-
+{% load static %}
 {% block content %}
-<div class="container mt-4">
-    <h2 class="text-center">All Tickets</h2>
-
-    <div class="text-center mb-3">
-        <a href="{% url 'add_bug' %}" class="btn btn-primary">+ Add New Ticket</a>
-    </div>
-
-    {% if bugs %}
-    <div class="table-responsive mt-4">
-    <table class="table table-hover table-striped table-bordered mt-3">
+<div class="table-container">
+    <table id="ticketTable" class="table table-bordered table-hover sticky-header">
         <thead class="table-dark">
-                <tr>
-                    <th>Title</th>
-                    <th class="text-nowrap">Description</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Project</th>
-                    <th class="text-nowrap">Assigned To</th>
-                    <th class="text-nowrap">Created At</th>
-                    <th class="text-nowrap">Created By</th>
-                    <th class="text-nowrap">Modified At</th>
-                    <th class="text-nowrap">Modified By</th>
-                    <th scope="col">Actions</th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for bug in bugs %}
-                <tr>
-                    <td>{{ bug.title }}</td>
-                    <td>{{ bug.description }}</td>
-                    <td><span class="badge bg-{% if bug.status == 'Open' %}danger{% elif bug.status == 'In Progress' %}warning{% else %}success{% endif %}">
-                        {{ bug.status }}</span></td>
-                    <td>{{ bug.project.name }}</td>
-                    <td>{{ bug.assigned_to.username }}</td>
-                    <td>{{ bug.created_at|date:"d M Y, H:i" }}</td>
-                    <td>{{ bug.created_by.username }}</td>
-                    <td>{{ bug.modified_at|date:"d M Y, H:i" }}</td>
-                    <td>{{ bug.modified_by.username }}</td>
-                    <td>
-                        <a href="{% url 'update_bug' bug.id %}" class="btn btn-sm btn-secondary">Edit</a>
-                    </td>
-                    <td>
-                        <a href="{% url 'remove_bug' bug.id %}" class="btn btn-danger btn-sm"
-                                   onclick="return confirm('Are you sure you want to remove this ticket?');">Remove</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Assigned To</th>
+                <th>Created By</th>
+                <th>Modified By</th>
+                <th>Created At</th>
+                <th>Modified At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for bug in page_obj %}
+            <tr>
+                <td>{{ bug.title }}</td>
+                <td>{{ bug.description|truncatewords:10 }}</td>
+                <td>{{ bug.status }}</td>
+                <td>{{ bug.assigned_to.username }}</td>
+                <td>{{ bug.created_by.username }}</td>
+                <td>{{ bug.modified_by.username }}</td>
+                <td>{{ bug.created_at }}</td>
+                <td>{{ bug.modified_at }}</td>
+                <td>
+                    <a href="{% url 'update_bug' bug.id %}" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="{% url 'remove_bug' bug.id %}" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="9" class="text-center text-muted">No bugs found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="d-flex justify-content-between align-items-center mt-3">
+    <div>
+        Showing page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
     </div>
-    {% else %}
-        <p class="text-center text-muted">No tickets yet.</p>
-    {% endif %}
+
+    <nav>
+        <ul class="pagination pagination-sm mb-0">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Previous</span>
+                </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Next</span>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
 </div>
 {% endblock %}

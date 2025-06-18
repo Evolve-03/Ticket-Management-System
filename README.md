@@ -1,11 +1,11 @@
-# Bug Tracker
+# Ticket Management System
 
 ## Project Overview
-Bug Tracker is a simple and efficient tool designed to help teams track and manage bugs or issues in their projects. It provides an intuitive interface for logging, updating, and resolving bugs, ensuring smooth project workflows.
+Ticket management system is a simple and efficient tool designed to help teams track and manage tickets in their projects. It provides an intuitive interface for logging, updating, and resolving bugs, ensuring smooth project workflows.
 
 ## Features
-- Add, update, and delete bug reports.
-- Categorize bugs by severity and priority.
-- Assign bugs to team members.
-- Track the status of bugs (e.g., Open, In Progress, Resolved).
-- Search and filter bugs for easy management.
+- Add, update, and delete ticket reports.
+- Categorize tickets by severity and priority.
+- Assign tickets to team members.
+- Track the status of tickets (e.g., Open, In Progress, Resolved).
+- Search and filter tickets for easy management.
